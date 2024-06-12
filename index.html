@@ -6,7 +6,7 @@
             border-radius: 10px;
         }
     </style>
-       <link rel="icon" type="image/x-icon" href="logo.webp">
+    <link rel="icon" type="image/x-icon" href="logo.webp" class="favicon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basic Form</title>
@@ -18,11 +18,16 @@
         <img src="logo.webp">
         <h1 id = "H">
             <i>
+            <a href="index.html" style="cursor:pointer; padding: auto; text-decoration: none;">
             Basic Form
+            </a>
             </i>
         </h1>
     </div>
     <div id="main_viewport">
+        <div id="toast">
+
+        </div>
         <div id ="form" class="content">
             <form action="" id="b_form">
                 <!-- <fieldset> -->
@@ -43,7 +48,7 @@
                 <input type="date" id="dob" name="dob"><br><br>
         
                 <label for="gender">Gender:</label><br>
-                <select id="gender" name="gender">
+                <select id="gender" name="gender" class="modern-dropdown">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
@@ -53,16 +58,16 @@
                 <input type="text" id="company" name="company"><br><br>
         
                 <label for="pin_code">Pin code:</label><br>
-                <input type="text" id="pin_code" name="pin_code"><br><br>
+                <input type="number" id="pin_code" name="pin_code"><br><br>
         
-                <label for="phone">Phone:</label><br>
+                <label for="phone">Phone: </label><br>
                 <input type="tel" id="phone" name="phone"><br><br>
         
-                <label for="email">Email:</label><br>
+                <label for="email">Email: </label><br>
                 <input type="email" id="email" name="email"><br><br>
         
-                <input type="submit" value="Submit" onclick="check()">
-                <p id="error">...</p>
+                <input style="width: 17vw" type="submit" value="Submit" onclick="check()">
+                <p id="error"></p>
                 <!-- </fieldset> -->
             </form>
         </div>
@@ -70,8 +75,9 @@
             
         </div>
         <div id = "table" class="content">
-            <table>
+            <table id="Details_table">
                 <tr>
+                  <th>S. No.</th>
                   <th>ID</th>
                   <th>Last Name</th>
                   <th>First Name</th>
@@ -81,15 +87,14 @@
                   <th>Pin code</th>
                   <th>Phone</th>
                   <th>Email</th>
-                </tr>
-                <tr>
-
+                  <th>Delete user</th>
                 </tr>
             </table> 
         </div>
     </div>
     <footer>
         Max Rows: 1000
+        Click ID to edit user
     </footer>
     <script src="script.js"></script>
 </body>

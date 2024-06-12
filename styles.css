@@ -23,6 +23,7 @@
         opacity: 0;
         transform: scale(0.5)
     }
+
     to {
         opacity: 1;
         transform: scale(1)
@@ -36,8 +37,8 @@ body {
     margin: 0;
     padding: 0;
 
-    overflow-x: hidden;
-    overflow-y: auto;
+    /* overflow-x: hidden;
+    overflow-y: scroll; */
 
     scrollbar-width: 0;
     animation: fadeFromLeft 1s ease;
@@ -54,28 +55,50 @@ body.dark {
     color: var(--text-light);
 }
 
-#header
+table,
+th,
+td {
+
+    /* Styling the border. */
+    border: 1.5px solid blue;
+    /* border-radius: 20px; */
+    padding: 6px;
+    margin: 6px;
+    border-radius: 5px;
+}
+
+table
 {
+    border-radius: 20px;
+}
+
+th
+{
+    background-color: aqua;
+    padding: 5px;
+    margin: 5px;
+}
+
+
+#header {
     display: flex;
     flex-direction: row;
     align-items: center;
     height: 6vh;
 }
 
-#header img
-{
+#header img {
     height: 5vh;
     width: auto;
     border-radius: 20px;
-    box-shadow: ;
+    box-shadow:1px 1px rgb(23, 64, 77); ;
     display: flex;
     padding: 5px;
     margin: 5px;
     margin-right: 10px;
 }
 
-#main_viewport
-{
+#main_viewport {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -85,12 +108,82 @@ body.dark {
     width: 100%;
 }
 
-.content
-{
+.content {
     border: 5px solid var(--background-dark);
     border-radius: 20px;
     padding: 10px;
     margin: 10px;
     margin-bottom: 5vh;
+    display: flex;
+    justify-items: center;
+    align-items: center;
 
+}
+
+.edit:hover
+{
+    background-color: var(--background-hover);
+    color: var(--text-hover);
+    animation: expand 1s ease;
+}
+
+
+input{
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px;
+    width: 15vw;
+    align-self: center;
+    transition: border-color 0.3s;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+}
+
+input:hover{
+    border-color: #569de8;
+}
+input:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: aliceblue;
+    border-width: 3px;
+}
+
+
+
+.modern-dropdown {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* padding: 8px 16px; */
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.modern-dropdown:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Custom dropdown arrow */
+.modern-dropdown::after {
+    content: '\25BC';
+    /* Unicode character for down arrow */
+    position: absolute;
+    /* top: calc(50% - 6px);
+    right: 10px; */
+    color: #666;
+    width: 1vw;
+}
+
+/* On hover styles */
+.modern-dropdown:hover {
+    background-color: #eaeaea;
 }
