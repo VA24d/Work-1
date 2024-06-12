@@ -182,7 +182,7 @@ function refresh_table() {
 
 
 function display_toast(text) {
-    document.getElementById("toast").innerText = text;
+    // document.getElementById("toast").innerText = text;
     alert(text);
     return;
 }
