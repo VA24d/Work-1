@@ -18,26 +18,23 @@
        <page-nav></page-nav>
        <div id="main_viewport">
               <page-form></page-form>
-              <page-table :data="data"></page-table>
+              <page-table :data="Array.from(entries.values())"></page-table>
        </div>
-       <footer></footer>
+       <footer-component></footer-component>
 
        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
        <script>
               const { createApp, ref } = Vue;
 
-              let app = createApp({
-                     data() {
-                            return {
-                                   data: ref([]), // Initialize with an empty array or appropriate data
-                            };
-                     },
-                     methods: {
-                            edit_user(index) {
-                                   var x = index;
-                                   console.log("Editing " + x);
-                                   let userString = localStorage.getItem(x);
-                                   let user = JSON.parse(userString);
+              const app = createApp({
+                     setup() {
+                            const entries = ref(new Map());
+                            let current_entry = ref(0);
+                            let toast_msg=ref('');
+
+                            const edit_user = (id) => {
+                                   console.log("Editing " + id);
+                                   let user = entries.value.get(id);
 
                                    document.getElementById('id').value = user.id;
                                    document.getElementById('last_name').value = user.last_name;
@@ -49,123 +46,32 @@
                                    document.getElementById('phone').value = user.phone;
                                    document.getElementById('email').value = user.email;
 
+                                   this.toast_msg.value = 'Editing user ' + id;
+                                   // entries.value.delete(id);
+                            };
 
-                                   function notequal(value) {
-                                          return value != x;
-                                   }
-                                   entries = entries.filter(notequal);
-                                   localStorage.removeItem(x);
-                            },
-                            delete_user(index) {
-                                   var x = index;
-                                   function notequal(value) {
-                                          return value != x;
-                                   }
-                                   entries = entries.filter(notequal);
-                                   localStorage.removeItem(x);
-                                   console.log("Removed user " + x);
+                            const delete_user = (id) => {
+                                   entries.value.delete(id);
+                                   console.log("Removed user " + id);
+                                   toast_msg.value = 'Deleted user ' + id;
+                            };
 
-                                   refresh_table();
-
-                                   display_toast("User " + x + " Deleted");
-                            }
-                     }
-              });
-
-              app.component('page-table', {
-                     props: ['data'],
-                     methods: {
-                            edit_user(index) {
-                                   this.$root.edit_user(index);
-                            },
-                            delete_user(index) {
-                                   this.$root.delete_user(index);
-                            }
-                     },
-                     template: `
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Last Name</th>
-                        <th>First Name</th>
-                        <th>Date of Birth</th>
-                        <th>Gender</th>
-                        <th>Company/Name</th>
-                        <th>Pin code</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Edit user</th>
-                        <th>Delete user</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(user, index) in data" :key="index">
-                        <td>{{ index }}</td>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.dob }}</td>
-                        <td>{{ user.gender }}</td>
-                        <td>{{ user.company }}</td>
-                        <td>{{ user.pin_code }}</td>
-                        <td>{{ user.phone }}</td>
-                        <td>{{ user.email }}</td>
-                        <td><button @click="edit_user(index)" title="Click to Edit"><img src="tool.svg" alt="Edit"></button></td>
-                        <td><button @click="delete_user(index)" title="Click to Delete"><img src="trash-2.svg" alt="Delete"></button></td>
-                    </tr>
-                </tbody>
-            </table>
-            `
-              });
-
-              app.component('page-form', {
-                     methods: {
-                            upload_user() {
+                            const upload_user = () => {
                                    console.log('Form submitted');
-                                   var idInput = document.getElementById('id');
-                                   var lastNameInput = document.getElementById('last_name');
-                                   var firstNameInput = document.getElementById('first_name');
-                                   var dobInput = document.getElementById('dob');
-                                   var genderSelect = document.getElementById('gender');
-                                   var companyInput = document.getElementById('company');
-                                   var pinCodeInput = document.getElementById('pin_code');
-                                   var phoneInput = document.getElementById('phone');
-                                   var emailInput = document.getElementById('email');
-
-                                   let user = {
-                                          id: idInput.value,
-                                          last_name: lastNameInput.value,
-                                          first_name: firstNameInput.value,
-                                          dob: dobInput.value,
-                                          gender: genderSelect.value,
-                                          company: companyInput.value,
-                                          pin_code: pinCodeInput.value,
-                                          phone: phoneInput.value,
-                                          email: emailInput.value
+                                   const user = {
+                                          id: document.getElementById('id').value,
+                                          last_name: document.getElementById('last_name').value,
+                                          first_name: document.getElementById('first_name').value,
+                                          dob: document.getElementById('dob').value,
+                                          gender: document.getElementById('gender').value,
+                                          company: document.getElementById('company').value,
+                                          pin_code: document.getElementById('pin_code').value,
+                                          phone: document.getElementById('phone').value,
+                                          email: document.getElementById('email').value
                                    };
 
-                                   let userString = JSON.stringify(user);
-
-                                   console.log(userString);
-
-                                   if (typeof current_entry === 'undefined') {
-                                          current_entry = 0;
-                                   }
-
-                                   current_entry = current_entry % 1001;
-
-                                   // Store the stringified user object in localStorage
-                                   localStorage.setItem(current_entry, userString);
-                                   // Assuming entries is a global array
-                                   if (typeof entries === 'undefined') {
-                                          entries = [];
-                                   }
-
-                                   entries.push(current_entry);
-                                   current_entry += 1;
-
-                                   // Display toast message function (assuming you have a function to display a toast message)
-                                   //display_toast("User information saved successfully!");
+                                   entries.value.set(user.id, user);
+                                   current_entry.value += 1;
 
                                    document.getElementById('id').value = "";
                                    document.getElementById('last_name').value = "";
@@ -176,76 +82,147 @@
                                    document.getElementById('pin_code').value = "";
                                    document.getElementById('phone').value = "";
                                    document.getElementById('email').value = "";
+
+                                   toast_msg.value = 'Uploaded user ' + user.id;
+                            };
+
+                            return { entries, toast_msg, current_entry, edit_user, delete_user, upload_user };
+                     }
+              });
+
+              app.component('page-table', {
+                     props: ['data', 'toast_msg'],
+                     methods: {
+                            edit_user(id) {
+                                   this.$root.edit_user(id);
+                            },
+                            delete_user(id) {
+                                   this.$root.delete_user(id);
                             }
                      },
                      template: `
-            <div id="toast"></div>
-            <form @submit.prevent="upload_user">
-                <h2>Basic Details:</h2>
-                     <label for="id">ID:</label><br>
-                     <input type="text" id="id" name="id" required><br><br>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Last Name</th>
+                                        <th>First Name</th>
+                                        <th>Date of Birth</th>
+                                        <th>Gender</th>
+                                        <th>Company/Name</th>
+                                        <th>Pin code</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Edit user</th>
+                                        <th>Delete user</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="user in data" :key="user.id">
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.last_name }}</td>
+                                        <td>{{ user.first_name }}</td>
+                                        <td>{{ user.dob }}</td>
+                                        <td>{{ user.gender }}</td>
+                                        <td>{{ user.company }}</td>
+                                        <td>{{ user.pin_code }}</td>
+                                        <td>{{ user.phone }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                          <button @click="edit_user(user.id)" title="Click to Edit"><img src="tool.svg" alt="Edit"></button>
+                                        </td>
+                                        <td>
+                                          <button @click="delete_user(user.id)" title="Click to Delete"><img src="trash-2.svg" alt="Delete"></button>
+                                          <div class="tooltip">Click to Delete</div>
+                                         </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            `
+              });
 
-                     <label for="last_name">Last Name:</label><br>
-                     <input type="text" id="last_name" name="last_name" required><br><br>
+              app.component('page-form', {
+                     data() {
+                            return {
+                            toast_msg: ''
+                            };
+                     },
+                     methods: {
+                            upload_user() {
+                                   this.$root.upload_user();
+                                   this.toast_msg = this.$root.toast_msg;
+                            }
+                     },
+                     template: `
+                            <div id="toast">{{ toast_msg }}</div>
+                            <form @submit.prevent="upload_user">
+                                <h2>Basic Details:</h2>
+                                <label for="id">ID:</label><br>
+                            <!--    pattern="[a-zA-Z0-9\-]+" oninvalid="setCustomValidity('ID should contain only alphanumeric characters')" -->
+                                <input id="id" name="id" required><br><br>
 
-                     <label for="first_name">First Name:</label><br>
-                     <input type="text" id="first_name" name="first_name" required><br><br>
+                                <label for="last_name">Last Name:</label><br>
+                                <!-- pattern="[a-zA-Z]+" oninvalid="setCustomValidity('Please enter on alphabets only. ')" -->
+                                <input  type="text" id="last_name" name="last_name" required><br><br>
 
-                     <label for="dob">Date of Birth:</label><br>
-                     <input type="date" id="dob" name="dob" required><br><br>
+                                <!-- pattern="[a-zA-Z]+" oninvalid="setCustomValidity('Please enter on alphabets only. ')" -->
+                                <label for="first_name">First Name:</label><br>
+                                <input type="text" id="first_name" name="first_name" required><br><br>
 
-                     <label for="gender">Gender:</label><br>
-                     <select id="gender" name="gender" class="modern-dropdown" required>
-                     <option value="male">Male</option>
-                     <option value="female">Female</option>
-                     <option value="other">Other</option>
-                     </select><br><br>
+                                <label for="dob">Date of Birth:</label><br>
+                                <input type="date" id="dob" name="dob" required><br><br>
 
-                     <label for="company">Company/Name:</label><br>
-                     <input type="text" id="company" name="company" required><br><br>
+                                <label for="gender">Gender:</label><br>
+                                <select id="gender" name="gender" class="modern-dropdown" required>
+                                <option value="" disabled selected>Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                </select><br><br>
 
-                     <label for="pin_code">Pin code:</label><br>
-                     <input type="number" id="pin_code" name="pin_code" required><br><br>
+                                <label for="company">Company/Name:</label><br>
+                                <input type="text" id="company" name="company" required><br><br>
 
-                     <label for="phone">Phone: </label><br>
-                     <input type="tel" id="phone" name="phone" required><br><br>
+                                <label for="pin_code">Pin code:</label><br>
+                                <input type="number" id="pin_code" name="pin_code" required><br><br>
 
-                     <label for="email">Email: </label><br>
-                     <input type="email" id="email" name="email" required><br><br>
+                                <label for="phone">Phone: </label><br>
+                                <input type="tel" id="phone" name="phone" required><br><br>
 
+                                <label for="email">Email: </label><br>
+                                <input maxlength="40" type="email" id="email" name="email" required><br><br>
 
-                <input style="width: 17vw" type="submit" value="Submit">
-                <p id="error"></p>
-            </form>
-            `
+                                <input style="width: 17vw" type="submit" value="Submit">
+                                <p id="error"></p>
+                            </form>
+                            `
               });
 
               app.component('footer-component', {
                      template: `
-            <footer>
-                Max Rows: 1000<br>
-                Click ID to edit user
-            </footer>
-            `
+                            <footer>
+                                Max Rows: 1000<br>
+                                Click ID to edit user
+                            </footer>
+                            `
               });
 
               app.component('page-nav', {
                      template: `
-            <div id ="navbar">
-            <img src="logo.webp" id="Logo">
-            <h1 id="H">
-                <i>
-                    <a href="index_new.html" style="cursor:pointer; padding: auto; text-decoration: none;">
-                        Basic Form
-                    </a>
-                </i>
-            </h1>
-            </div>
-            `
+                            <div id ="navbar">
+                            <img src="logo.webp" id="Logo">
+                            <h1 id="H">
+                                <i>
+                                    <a href="index_new.html" style="cursor:pointer; padding: auto; text-decoration: none;">
+                                        Basic Form
+                                    </a>
+                                </i>
+                            </h1>
+                            </div>
+                            `
               });
 
               app.mount('body');
-
        </script>
 </body>
 
