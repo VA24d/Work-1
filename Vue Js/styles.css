@@ -37,7 +37,7 @@ body {
     margin: 0;
     padding: 0;
 
-    overflow-x: hidden;
+    overflow-x:auto;
     overflow-y: scroll;
 
     scrollbar-width: 0;
@@ -90,6 +90,11 @@ th
     padding: 5px;
     margin: 5px;
     background-color: rgb(11, 149, 255);
+}
+
+.popup
+{
+    display: none;
 }
 
 #Logo{
@@ -198,4 +203,10 @@ input:focus {
 footer
 {
     padding: 10px;
+}
+
+.auto-index td:first-child:before
+{
+  counter-increment: Serial;      /* Increment the Serial counter */
+  content: "Serial is: " counter(Serial); /* Display the counter */
 }
