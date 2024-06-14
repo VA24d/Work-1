@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .favicon {
+            border-radius: 10px;
+        }
+    </style>
+    <link rel="icon" type="image/x-icon" href="logo.webp" class="favicon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Form</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <div id = "header">
+        <img src="logo.webp">
+        <h1 id = "H">
+            <i>
+            <a href="index.html" style="cursor:pointer; padding: auto; text-decoration: none;">
+            Basic Form
+            </a>
+            </i>
+        </h1>
+    </div>
+    <div id="main_viewport">
+        <div id ="form" class="content">
+            <div id="toast"></div>
+            <form action="" id="b_form">
+                <h2>
+                    Basic Details: 
+                </h2>
+                <label for="id">ID:</label><br>
+                <input type="text" id="id" name="id"><br><br>
+        
+                <label for="last_name">Last Name:</label><br>
+                <input type="text" id="last_name" name="last_name"><br><br>
+        
+                <label for="first_name">First Name:</label><br>
+                <input type="text" id="first_name" name="first_name"><br><br>
+        
+                <label for="dob">Date of Birth:</label><br>
+                <input type="date" id="dob" name="dob"><br><br>
+        
+                <label for="gender">Gender:</label><br>
+                <select id="gender" name="gender" class="modern-dropdown">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select><br><br>
+        
+                <label for="company">Company/Name:</label><br>
+                <input type="text" id="company" name="company"><br><br>
+        
+                <label for="pin_code">Pin code:</label><br>
+                <input type="number" id="pin_code" name="pin_code"><br><br>
+        
+                <label for="phone">Phone: </label><br>
+                <input type="tel" id="phone" name="phone"><br><br>
+        
+                <label for="email">Email: </label><br>
+                <input type="email" id="email" name="email"><br><br>
+        
+                <input style="width: 17vw" type="submit" value="Submit" @click.prevent="check()">
+                <p id="error"></p>
+            </form>
+        </div>
+        <div>
+            
+        </div>
+        <div id = "table" class="content">
+            <table id="Details_table">
+                <tr>
+                  <th>S. No.</th>
+                  <th>ID</th>
+                  <th>Last Name</th>
+                  <th>First Name</th>
+                  <th>Date of Birth</th>
+                  <th>Gender</th>
+                  <th>Company/Name</th>
+                  <th>Pin code</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Edit user</th>
+                  <th>Delete user</th>
+                </tr>
+                <tr v-for="(user, index) in user_list">
+                    <td>{{index}}</td>
+                    <td v-for="key in Object.keys(user)">{{user[key]}}</td>
+                    <td><button onclick="edit_user({{index}})" title="Click to Edit"><img src="tool.svg"></button></td>
+                    <td><button onclick="delete_user({{index}})" title="Click to Delete"><img src="trash-2.svg"></button></td>
+                </tr>
+            </table> 
+        </div>
+    </div>
+    <footer>
+        Max Rows: 1000<br>
+        Click ID to edit user
+    </footer>
+    <!-- <script src="script.js"></script> -->
+
+    <script>
+        import { createApp, ref } from 'vue'
+
+        Vue.createApp().mount('#content');
+        Vue.createApp({
+            data(){
+                return {
+                    user_list: [],
+                    num_users: 0
+            };
+        }}).mount('#table');
+
+    </script>
+
+</body>
+</html>
